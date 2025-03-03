@@ -1,9 +1,9 @@
 # ========================
 # CodeIgniter 4
 # ========================
-/writable/*
-!/writable/.gitkeep
-!/writable/index.html
+# /writable/*
+# !/writable/.gitkeep
+# !/writable/index.html
 
 # ========================
 # Ambiente e Configurações
