@@ -1,0 +1,7 @@
+ CI_ENVIRONMENT = production
+
+database.default.hostname = 
+database.default.database = 
+database.default.username = 
+database.default.password = 
+database.default.DBDriver = MySQLi
