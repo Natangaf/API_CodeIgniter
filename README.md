@@ -1,68 +1,133 @@
-# CodeIgniter 4 Application Starter
 
-## What is CodeIgniter?
+# Sistema de Pedidos - API RESTful
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+API para gestão de clientes, produtos e pedidos com CodeIgniter 4
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 📥 Download
+[Clique aqui para baixar o projeto (.zip)](https://github.com/Natangaf/API_CodeIgniter/archive/refs/heads/main.zip)
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 🚀 Configuração Inicial
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+### Pré-requisitos
+- PHP 7.4 ou superior
+- MySQL 5.7+
+- Composer
+- Git (opcional)
 
-## Installation & updates
+### Instalação
+```bash
+# Clone o repositório
+git clone https://github.com/Natangaf/API_CodeIgniter.git
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+# Acesse a pasta do projeto
+cd API_CodeIgniter
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+# Instale as dependências
+composer install
+```
 
-## Setup
+### ⚙️ Configuração do Ambiente
+Renomeie o arquivo .env.example para .env
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+Configure o arquivo .env:
 
-## Important Change with index.php
+```ini
+# Database
+database.default.hostname = localhost
+database.default.database = api_pedidos
+database.default.username = root
+database.default.password = 
+database.default.DBDriver = MySQLi
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+# App
+app.baseURL = 'http://localhost:8080/'
+```
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+### 🗃️ Configuração do Banco de Dados
+Crie o banco de dados:
 
-**Please** read the user guide for a better explanation of how CI4 works!
+```sql
+CREATE DATABASE api_pedidos;
+```
 
-## Repository Management
+Execute as migrations:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+```bash
+php spark migrate
+```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+(Opcional) Popule com dados de teste:
 
-## Server Requirements
+```bash
+php spark db:seed ClientSeeder
+php spark db:seed ProdutoSeeder
+```
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+### 🌐 Endpoints da API
+#### Clientes
+- `GET /clientes` - Lista todos
+- `POST /clientes` - Cria novo
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+```json
+{
+  "documento": "123456789",
+  "nome": "Cliente Exemplo",
+  "tipo": "PF"
+}
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+#### Produtos
+- `GET /produtos` - Lista todos
+- `POST /produtos` - Cria novo
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+```json
+{
+  "nome": "Produto Teste",
+  "descricao": "Descrição exemplo",
+  "preco": 99.90,
+  "estoque": 10
+}
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+#### Pedidos
+- `POST /pedidos` - Cria novo pedido
+
+```json
+{
+  "cliente_id": 1,
+  "produto_id": 3,
+  "quantidade": 2,
+  "status": "Em Aberto"
+}
+```
+
+### 🛠️ Estrutura do Projeto
+```
+api-pedidos/
+├── app/
+│   ├── Config/       # Configurações
+│   ├── Controllers/  # Controladores
+│   ├── Models/       # Modelos
+│   └── Database/     # Migrations e Seeds
+├── public/           # Pasta pública
+└── writable/         # Logs e cache
+```
+
+### 🚨 Troubleshooting
+#### Erro nas Migrations
+```bash
+# Limpe o cache
+php spark cache:clear
+
+# Force recriação das tabelas
+php spark migrate:refresh --all
+```
+
+#### Problemas com Foreign Keys
+- Verifique se as tabelas clientes e produtos existem
+- Confira se os IDs são UNSIGNED no banco
+
+### 📄 Licença
+MIT License - Detalhes da licença
+
+✅ Pronto para usar! Acesse via Postman ou Insomnia usando http://localhost:8080/
