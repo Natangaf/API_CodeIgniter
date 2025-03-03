@@ -86,7 +86,6 @@ class PedidoController extends ResourceController
             'retorno' => $this->pedidoModel->find($pedidoId)
         ]);
     }
-
     // Atualizar pedido (PUT - completo)
     public function update($id = null)
     {
@@ -102,7 +101,35 @@ class PedidoController extends ResourceController
             return $this->failValidationErrors($this->validator->getErrors());
         }
 
-        // Atualizar
+        // Verificar alterações críticas
+        $mudouProduto = ($data['produto_id'] != $pedido['produto_id']);
+        $mudouQuantidade = ($data['quantidade'] != $pedido['quantidade']);
+
+        if ($mudouProduto || $mudouQuantidade) {
+            // Buscar produto original
+            $produtoOriginal = $this->produtoModel->find($pedido['produto_id']);
+
+            // Restaurar estoque original
+            $this->produtoModel->update($pedido['produto_id'], [
+                'estoque' => $produtoOriginal['estoque'] + $pedido['quantidade']
+            ]);
+
+            // Buscar novo produto
+            $novoProduto = $this->produtoModel->find($data['produto_id']);
+            if (!$novoProduto || $novoProduto['estoque'] < $data['quantidade']) {
+                return $this->fail("Estoque insuficiente para o novo produto");
+            }
+
+            // Atualizar novo estoque
+            $this->produtoModel->update($data['produto_id'], [
+                'estoque' => $novoProduto['estoque'] - $data['quantidade']
+            ]);
+
+            // Recalcular total
+            $data['total'] = $novoProduto['preco'] * $data['quantidade'];
+        }
+
+        // Atualizar pedido
         if ($this->pedidoModel->update($id, $data)) {
             return $this->respond([
                 'cabecalho' => [
@@ -126,8 +153,35 @@ class PedidoController extends ResourceController
 
         $data = $this->request->getJSON(true);
 
-        // Apenas status pode ser atualizado via PATCH
-        if ($this->pedidoModel->update($id, ['status' => $data['status']])) {
+        // Validar apenas status
+        if (!isset($data['status'])) {
+            return $this->failValidationErrors(['status' => 'Campo status é obrigatório']);
+        }
+
+        $novoStatus = $data['status'];
+        $statusAnterior = $pedido['status'];
+
+        // Controle de estoque para cancelamento
+        if ($novoStatus === 'Cancelado' && $statusAnterior !== 'Cancelado') {
+            $produto = $this->produtoModel->find($pedido['produto_id']);
+            $this->produtoModel->update($pedido['produto_id'], [
+                'estoque' => $produto['estoque'] + $pedido['quantidade']
+            ]);
+        }
+
+        // Reverter cancelamento
+        if ($statusAnterior === 'Cancelado' && $novoStatus !== 'Cancelado') {
+            $produto = $this->produtoModel->find($pedido['produto_id']);
+            if ($produto['estoque'] < $pedido['quantidade']) {
+                return $this->fail("Estoque insuficiente para reativar o pedido");
+            }
+            $this->produtoModel->update($pedido['produto_id'], [
+                'estoque' => $produto['estoque'] - $pedido['quantidade']
+            ]);
+        }
+
+        // Atualizar status
+        if ($this->pedidoModel->update($id, ['status' => $novoStatus])) {
             return $this->respond([
                 'cabecalho' => [
                     'status' => 200,

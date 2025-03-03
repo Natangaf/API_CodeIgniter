@@ -27,6 +27,7 @@ $routes->delete('/produtos/(:num)', 'ProdutoController::delete/$1');
 $routes->get('/pedidos', 'PedidoController::index');
 $routes->get('/pedidos/(:num)', 'PedidoController::show/$1');
 $routes->post('/pedidos', 'PedidoController::create');
-$routes->patch('/pedidos/(:num)', 'PedidoController::update/$1');
+$routes->put('/pedidos/(:num)', 'PedidoController::update/$1');
+$routes->patch('/pedidos/(:num)', 'PedidoController::patch/$1');
 $routes->delete('/pedidos/(:num)', 'PedidoController::delete/$1');
 
