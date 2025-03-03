@@ -1,0 +1,54 @@
+# ========================
+# CodeIgniter 4
+# ========================
+/writable/*
+!/writable/.gitkeep
+!/writable/index.html
+
+# ========================
+# Ambiente e Configurações
+# ========================
+.env
+.phpunit.result.cache
+
+# ========================
+# Dependências
+# ========================
+/vendor/
+/node_modules/
+
+# ========================
+# IDEs e Editores
+# ========================
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+
+# ========================
+# Sistema Operacional
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# Logs e Arquivos Temporários
+# ========================
+*.log
+php_error.log
+*.cache
+
+# ========================
+# Testes e Build
+# ========================
+/coverage/
+/build/
+/composer.phar
+
+# ========================
+# Uploads e Conteúdo Gerado
+# ========================
+/public/uploads/*
+!/public/uploads/.gitkeep

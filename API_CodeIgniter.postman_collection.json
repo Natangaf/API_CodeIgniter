@@ -1,0 +1,228 @@
+{
+  "info": {
+    "_postman_id": "12345678-1234-1234-1234-123456789012",
+    "name": "API CodeIgniter",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Listar Clientes",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/clientes"
+          }
+        },
+        {
+          "name": "Buscar Cliente por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/clientes/:id"
+          }
+        },
+        {
+          "name": "Criar Cliente",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/clientes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo\": \"PF\", \"documento\": \"12345678900\", \"nome\": \"João da Silva\"}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/clientes/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo\": \"PF\", \"documento\": \"12345678900\", \"nome\": \"João da Silva Atualizado\"}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Cliente",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/clientes/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Listar Produtos",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/produtos"
+          }
+        },
+        {
+          "name": "Buscar Produto por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/produtos/:id"
+          }
+        },
+        {
+          "name": "Criar Produto",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/produtos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\": \"Produto Exemplo\", \"descricao\": \"Descrição do produto\", \"preco\": 99.99, \"estoque\": 10}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar Produto",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/produtos/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nome\": \"Produto Atualizado\", \"descricao\": \"Nova descrição\", \"preco\": 149.99, \"estoque\": 5}"
+            }
+          }
+        },
+        {
+          "name": "Deletar Produto",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/produtos/:id"
+          }
+        }
+      ]
+    },
+    {
+        "name": "Pedidos",
+        "item": [
+            {
+                "name": "Listar Pedidos",
+                "request": {
+                    "method": "GET",
+                    "url": "{{base_url}}/pedidos",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "response": [
+                    {
+                        "name": "Sucesso",
+                        "originalRequest": {
+                            "method": "GET",
+                            "url": "{{base_url}}/pedidos"
+                        },
+                        "status": "OK",
+                        "code": 200,
+                        "_postman_previewlanguage": "json",
+                        "body": "{\n    \"cabecalho\": {\n        \"status\": 200,\n        \"mensagem\": \"Lista de pedidos recuperada com sucesso\"\n    },\n    \"retorno\": [\n        {\n            \"id\": 1,\n            \"cliente_id\": 1,\n            \"status\": \"Em Aberto\",\n            \"total\": 150.00,\n            \"itens\": [\n                {\n                    \"produto_id\": 5,\n                    \"quantidade\": 2,\n                    \"preco\": 75.00\n                }\n            ]\n        }\n    ]\n}"
+                    }
+                ]
+            },
+            {
+                "name": "Criar Pedido",
+                "request": {
+                    "method": "POST",
+                    "url": "{{base_url}}/pedidos",
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n    \"cliente_id\": 1,\n    \"status\": \"Em Aberto\",\n    \"produtos\": [\n        {\n            \"produto_id\": 5,\n            \"quantidade\": 2\n        },\n        {\n            \"produto_id\": 8,\n            \"quantidade\": 1\n        }\n    ]\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "response": [
+                    {
+                        "name": "Criado",
+                        "originalRequest": {
+                            "method": "POST",
+                            "url": "{{base_url}}/pedidos"
+                        },
+                        "status": "Created",
+                        "code": 201,
+                        "_postman_previewlanguage": "json",
+                        "body": "{\n    \"cabecalho\": {\n        \"status\": 201,\n        \"mensagem\": \"Pedido criado com sucesso\"\n    },\n    \"retorno\": {\n        \"id\": 2,\n        \"cliente_id\": 1,\n        \"status\": \"Em Aberto\",\n        \"total\": 225.00,\n        \"itens\": [\n            {\n                \"produto_id\": 5,\n                \"quantidade\": 2,\n                \"preco\": 75.00\n            },\n            {\n                \"produto_id\": 8,\n                \"quantidade\": 1,\n                \"preco\": 75.00\n            }\n        ]\n    }\n}"
+                    }
+                ]
+            },
+            {
+                "name": "Atualizar Status (Total)",
+                "request": {
+                    "method": "PUT",
+                    "url": "{{base_url}}/pedidos/1",
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n    \"status\": \"Pago\"\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Atualizar Status (Parcial)",
+                "request": {
+                    "method": "PATCH",
+                    "url": "{{base_url}}/pedidos/1",
+                    "body": {
+                        "mode": "raw",
+                        "raw": "{\n    \"status\": \"Cancelado\"\n}",
+                        "options": {
+                            "raw": {
+                                "language": "json"
+                            }
+                        }
+                    },
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                }
+            },
+            {
+                "name": "Excluir Pedido",
+                "request": {
+                    "method": "DELETE",
+                    "url": "{{base_url}}/pedidos/1",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+  ]
+}
